@@ -11,6 +11,11 @@
 			<li><a href="{{ url_for('show', name=i) }}">{{ i }}</a></li>
 		</ul>
 		{% endfor %}
+		<p><h2>Subir imagem</h2></p>
+		<form method="post" enctype=multipart/form-data> 
+			<input type="file" name="file" accept="image/*">
+			<input type="submit" value="Upload">
+		</form>
 	</body>
 
 </html>
