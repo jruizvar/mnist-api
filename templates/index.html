@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+	<head>
+		<title> MNIST API </title>
+	</head>
+
+	<body>
+		<p><h1>Lista de imagens</h1></p>
+		{% for i in imgs %}
+		<ul>
+			<li><a href="{{ url_for('show', name=i) }}">{{ i }}</a></li>
+		</ul>
+		{% endfor %}
+	</body>
+
+</html>
