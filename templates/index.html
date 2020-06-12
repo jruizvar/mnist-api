@@ -1,21 +1,33 @@
 <!doctype html>
 <html>
-	<head>
-		<title> MNIST API </title>
-	</head>
+    <head>
+        <title> MNIST API </title>
+    </head>
 
-	<body>
-		<p><h1>Lista de imagens</h1></p>
-		{% for i in imgs %}
-		<ul>
-			<li><a href="{{ url_for('show', name=i) }}">{{ i }}</a></li>
-		</ul>
-		{% endfor %}
-		<p><h2>Subir imagem</h2></p>
-		<form method="post" enctype=multipart/form-data> 
-			<input type="file" name="file" accept="image/*">
-			<input type="submit" value="Upload">
-		</form>
-	</body>
+    <body>
+        <p><h1>Lista de imagens</h1></p>
+        <table>
+    	    {% for i in imgs %}
+    	    <tr>
+		<td>
+		    <form action="{{ url_for('delete', name=i) }}" method="post">
+			<button onclick="return confirm('Apagar imagem?')">
+			    Delete
+			</button>
+		    </form>
+
+		</td>
+    	        <td>
+		    <h3><a href="{{ url_for('show', name=i) }}">{{ i }}</a></h3>
+    	        </td>
+    	    </tr>
+    	    {% endfor %}
+    	</table>
+        <p><h2>Subir imagem</h2></p>
+        <form method="post" enctype=multipart/form-data> 
+    	    <input type="file" name="file" accept="image/*">
+    	    <input type="submit" value="Upload">
+        </form>
+    </body>
 
 </html>
