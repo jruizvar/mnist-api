@@ -1,6 +1,10 @@
 """ Initial set up
 
-    set FLASK_APP=mnist.py
+      set FLASK_APP=mnist.py
+
+    Execution
+
+      flask run --host 0.0.0.0
 """
 
 from flask import Flask, render_template, url_for
@@ -26,8 +30,3 @@ def index():
         "index.html",
         imgs=imgs
     )
-
-
-if __name__ == "__main__":
-    imgs = os.listdir(r"static\imgs")
-    print(imgs)
