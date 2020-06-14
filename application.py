@@ -31,7 +31,7 @@ def model(name):
     img_path = os.path.join("static", "imgs", name)
     im = plt.imread(img_path)
     X = prepimage(im)
-    clf = load(os.path.join("static", "models", "mnist_svm.joblib"))
+    clf = load(os.path.join("models", "mnist_svm.joblib"))
     prediction = clf.predict(X)[0]
     return prediction
 
@@ -73,13 +73,6 @@ def index():
         "index.html",
         imgs=imgs
     )
-
-
-@application.route('/favicon.ico')
-def favicon():
-    return send_from_directory(
-            os.path.join(application.root_path, 'static'),
-            'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 if __name__ == "__main__":
