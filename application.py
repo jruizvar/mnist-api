@@ -1,47 +1,60 @@
-""" Initial set up
+""" Initial set up for local tests
 
-      set FLASK_APP=mnist.py
+      set FLASK_APP=application.py
 
     Execution
 
       flask run --host 0.0.0.0
 """
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import (
+        Flask, flash, redirect, render_template,
+        request, send_from_directory, url_for
+        )
 from joblib import load
-from skimage import io, util
+from skimage.transform import resize
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 
 
-app = Flask(__name__)
+application = Flask(__name__)
+
+
+def prepimage(im):
+    im_gray = np.squeeze(im[:, :, [-1]])
+    im_tiny = resize(im_gray, (28, 28))
+    im_flat = np.reshape(im_tiny, (1, -1))
+    return im_flat
 
 
 def model(name):
     img_path = os.path.join("static", "imgs", name)
-    im = io.imread(img_path, as_gray=True)
+    im = plt.imread(img_path)
+    X = prepimage(im)
     clf = load(os.path.join("static", "models", "mnist_svm.joblib"))
-    X = np.reshape(util.invert(im), (1, im.size))
-    prediction = clf.predict(X)
-    return prediction[0]
+    prediction = clf.predict(X)[0]
+    return prediction
 
 
-@app.route("/<name>")
+@application.route("/<name>")
 def show(name):
     filename = "imgs/" + name
+    prediction = model(name)
     return render_template(
         "canvas.html",
-        name=url_for("static", filename=filename)
+        name=url_for("static", filename=filename),
+        prediction=prediction
     )
 
 
-@app.route("/<name>/delete", methods=["POST"])
+@application.route("/<name>/delete", methods=["POST"])
 def delete(name):
     filename = os.path.join("static", "imgs", name)
     os.remove(filename)
     return redirect(url_for("index"))
 
 
-@app.route("/", methods=["GET", "POST"])
+@application.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         if "file" not in request.files:
@@ -60,3 +73,14 @@ def index():
         "index.html",
         imgs=imgs
     )
+
+
+@application.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+            os.path.join(application.root_path, 'static'),
+            'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+
+if __name__ == "__main__":
+    application.run()
